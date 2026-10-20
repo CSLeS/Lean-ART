@@ -23,6 +23,7 @@ jobs:
           test: "false"
           use-mathlib-cache: "true"
           leanchecker: "true"
+          leanchecker-args: "AnthropicRepresentation"
       - name: Audit theorem dependencies and exact statement types
         run: |
           lake env lean AnthropicRepresentation.lean | tee theorem-audit.txt
