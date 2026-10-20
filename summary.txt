@@ -1,0 +1,9 @@
+Required public axiom audits: 13 / 13 passed.
+Allowed dependencies only: propext, Classical.choice, Quot.sound.
+Standalone build: passed (3014 jobs).
+Existing project build: passed (8719 jobs).
+Completed entry-file run: exit 0.
+Fully explicit public types and protected definitions: exit 0.
+Source contract comparisons: 3 / 3 passed.
+No unresolved proof obligations.
+Pinned mathlib working tree: clean.

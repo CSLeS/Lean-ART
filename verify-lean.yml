@@ -1,0 +1,30 @@
+name: Verify Lean proof
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get the certificate sources
+        uses: actions/checkout@v4
+      - name: Build and independently check with Lean
+        uses: leanprover/lean-action@v1
+        env:
+          LEAN_NUM_THREADS: "1"
+        with:
+          build: "true"
+          test: "false"
+          use-mathlib-cache: "true"
+          leanchecker: "true"
+      - name: Audit theorem dependencies and exact statement types
+        run: |
+          lake env lean AnthropicRepresentation.lean | tee theorem-audit.txt
+          lake env lean AnthropicRepresentation/PublicContract.lean | tee public-contract-audit.txt
+          python3 verification/check_axiom_report.py theorem-audit.txt

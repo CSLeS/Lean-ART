@@ -1,0 +1,1 @@
+Source scan: no proof placeholders, new axioms, or trust bypasses found.

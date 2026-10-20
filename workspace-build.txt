@@ -1,0 +1,29 @@
+warning: could not canonicalize path: 'C:\Users\samip\OneDrive\Documents\ChatGPT\Maths\lean'
+warning: could not canonicalize path: 'C:\Users\samip\OneDrive\Documents\ChatGPT\Maths\lean'
+ℹ [8711/8719] Replayed AnthropicRepresentation
+info: AnthropicRepresentation.lean:115:0: 'LotteryChoice.representation_of_axioms' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: AnthropicRepresentation.lean:116:0: 'LotteryChoice.axioms_of_representation' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: AnthropicRepresentation.lean:117:0: 'LotteryChoice.representation_iff' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: AnthropicRepresentation.lean:118:0: 'LotteryChoice.delib_iff' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: AnthropicRepresentation.lean:119:0: 'LotteryChoice.R_unique' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: AnthropicRepresentation.lean:120:0: 'LotteryChoice.u_unique' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: AnthropicRepresentation.lean:121:0: 'LotteryChoice.Representation.positiveAffine' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: AnthropicRepresentation.lean:122:0: 'LotteryChoice.Paper.representation_iff' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: AnthropicRepresentation.lean:123:0: 'LotteryChoice.Paper.deliberation_iff' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: AnthropicRepresentation.lean:124:0: 'LotteryChoice.Paper.R_unique' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: AnthropicRepresentation.lean:125:0: 'LotteryChoice.Paper.u_unique' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: AnthropicRepresentation.lean:127:0: 'LotteryChoice.Representation.positiveAffine_u' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: AnthropicRepresentation.lean:128:0: 'LotteryChoice.Representation.positiveAffine_R' depends on axioms: [propext, Classical.choice, Quot.sound]
+ℹ [8715/8719] Replayed ResearchWorkspace.Char3Wick
+info: ResearchWorkspace/Char3Wick.lean:50:0: 'Char3Wick.fourPort_covariance' depends on axioms: [propext, Quot.sound]
+info: ResearchWorkspace/Char3Wick.lean:51:0: 'Char3Wick.fourPort_exceptional' depends on axioms: [propext]
+info: ResearchWorkspace/Char3Wick.lean:52:0: 'Char3Wick.triple_equal' depends on axioms: [propext, Classical.choice, Quot.sound]
+ℹ [8716/8719] Replayed ResearchWorkspace.FiveScalarWick
+info: ResearchWorkspace/FiveScalarWick.lean:45:0: 'FiveScalarWick.pair_square_certificate' depends on axioms: [propext, Quot.sound]
+info: ResearchWorkspace/FiveScalarWick.lean:46:0: 'FiveScalarWick.pair_mul_eq_zero' depends on axioms: [propext, Classical.choice, Quot.sound]
+ℹ [8717/8719] Replayed ResearchWorkspace.OddBinomialCircuit
+info: ResearchWorkspace/OddBinomialCircuit.lean:52:0: 'OddBinomialCircuit.no_three_binomial_product' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: ResearchWorkspace/OddBinomialCircuit.lean:53:0: 'OddBinomialCircuit.three_pair_certificate' depends on axioms: [propext]
+info: ResearchWorkspace/OddBinomialCircuit.lean:54:0: 'OddBinomialCircuit.no_three_nonzero_rows' depends on axioms: [propext, Classical.choice, Quot.sound]
+Build completed successfully (8719 jobs).
+Exit code: 0

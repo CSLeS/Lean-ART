@@ -1,0 +1,6 @@
+
+ProtectedCoreDefinitionsIdentical : True
+PaperAdapterIdentical             : True
+DelibAndVIdentical                : True
+InputSHA256                       : 05E74A2722CF7525D0570DA4F2C327A38F6D802D8DC5B589112BBD5014C96AA5
+

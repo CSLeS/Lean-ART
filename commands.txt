@@ -1,0 +1,57 @@
+Commands actually run on 20 October 2026
+=======================================
+
+Standalone working directory:
+C:\Users\samip\OneDrive\Documents\ChatGPT\Maths\deliverables\anthropic-representation
+
+1. Standalone project build, including the public contract checks:
+
+& 'C:\Users\samip\.elan\toolchains\leanprover--lean4---v4.33.1\bin\lake.exe' build 2>&1 | Tee-Object -FilePath verification\build.txt
+$taskBuildExit = $LASTEXITCODE
+"Exit code: $taskBuildExit" | Tee-Object -FilePath verification\build.txt -Append
+exit $taskBuildExit
+
+2. Run the completed entry file (all supplied audit commands, plus the two
+positive affine identities):
+
+& 'C:\Users\samip\.elan\toolchains\leanprover--lean4---v4.33.1\bin\lake.exe' env lean AnthropicRepresentation.lean 2>&1 | Tee-Object -FilePath verification\entry-audit.txt
+$taskAuditExit = $LASTEXITCODE
+"Exit code: $taskAuditExit" | Tee-Object -FilePath verification\entry-audit.txt -Append
+exit $taskAuditExit
+
+3. Elaborated public types, protected definitions, and prerequisite audits:
+
+& 'C:\Users\samip\.elan\toolchains\leanprover--lean4---v4.33.1\bin\lake.exe' env lean AnthropicRepresentation/PublicContract.lean 2>&1 | Tee-Object -FilePath verification\public-contract.txt
+$taskAuditExit = $LASTEXITCODE
+"Exit code: $taskAuditExit" | Tee-Object -FilePath verification\public-contract.txt -Append
+exit $taskAuditExit
+
+4. Versions (recorded in versions.txt):
+
+& 'C:\Users\samip\.elan\toolchains\leanprover--lean4---v4.33.1\bin\lake.exe' env lean --version
+git -C .lake\packages\mathlib rev-parse HEAD
+Get-Content lean-toolchain
+
+5. Mechanical comparison with the original supplied file:
+
+.\verification\compare-contract.ps1 -Original 'C:\Users\samip\Downloads\AnthropicRepresentation.lean' | Tee-Object -FilePath verification\contract-comparison.txt
+
+6. Source scan (rg exit 1 means no matches):
+
+rg -n '\b(sorry|admit|sorryAx|native_decide|implemented_by|unsafe)\b|^\s*axiom\s' AnthropicRepresentation.lean AnthropicRepresentation -g '*.lean'
+
+7. Existing project build, working directory:
+C:\Users\samip\OneDrive\Documents\ChatGPT\Maths\lean
+
+lake build 2>&1 | Tee-Object -FilePath '..\deliverables\anthropic-representation\verification\workspace-build.txt'
+$taskBuildExit = $LASTEXITCODE
+"Exit code: $taskBuildExit" | Tee-Object -FilePath '..\deliverables\anthropic-representation\verification\workspace-build.txt' -Append
+exit $taskBuildExit
+
+Cache preparation for the standalone run:
+The pre-existing pinned dependency cache was reused via a local directory
+junction from standalone .lake/packages to the existing lean/.lake/packages.
+All AnthropicRepresentation proof modules were compiled from the delivered
+sources into the standalone project's initially empty build directory.
+No fresh network download was needed. The portable project configuration and
+ZIP contain no junction or absolute-path dependency.

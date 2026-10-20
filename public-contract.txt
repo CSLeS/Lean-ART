@@ -1,0 +1,287 @@
+@LotteryChoice.axioms_of_representation : ∀ {X : Type} [inst : Fintype X] {Site S : Type} {Z : S → Type}
+  [inst_1 : (s : S) → Fintype (Z s)] (site : S → Site) [Nonempty S]
+  (pref : LotteryChoice.Ticket X Z → LotteryChoice.Ticket X Z → Prop) (rep : LotteryChoice.Representation site pref),
+  LotteryChoice.Axioms site pref
+@LotteryChoice.representation_of_axioms : ∀ {X : Type} [inst : Fintype X] {Site S : Type} {Z : S → Type}
+  [inst_1 : (s : S) → Fintype (Z s)] (site : S → Site)
+  (pref : LotteryChoice.Ticket X Z → LotteryChoice.Ticket X Z → Prop),
+  LotteryChoice.Axioms site pref → Nonempty (LotteryChoice.Representation site pref)
+@LotteryChoice.representation_iff : ∀ {X : Type} [inst : Fintype X] {Site S : Type} {Z : S → Type}
+  [inst_1 : (s : S) → Fintype (Z s)] (site : S → Site) [Nonempty S]
+  (pref : LotteryChoice.Ticket X Z → LotteryChoice.Ticket X Z → Prop),
+  LotteryChoice.Axioms site pref ↔ Nonempty (LotteryChoice.Representation site pref)
+@LotteryChoice.delib_iff : ∀ {X : Type} [inst : Fintype X] {Site S : Type} {Z : S → Type}
+  [inst_1 : (s : S) → Fintype (Z s)] (site : S → Site) (f : (s : S) → Z s → LotteryChoice.Lottery X)
+  {pref : LotteryChoice.Ticket X Z → LotteryChoice.Ticket X Z → Prop} (rep : LotteryChoice.Representation site pref)
+  {s s' : S},
+  site s = site s' → (LotteryChoice.delib f pref s s' ↔ LotteryChoice.V site f rep s' ≤ LotteryChoice.V site f rep s)
+@LotteryChoice.R_unique : ∀ {X : Type} [inst : Fintype X] {Site S : Type} {Z : S → Type}
+  [inst_1 : (s : S) → Fintype (Z s)] (site : S → Site)
+  {pref : LotteryChoice.Ticket X Z → LotteryChoice.Ticket X Z → Prop} (r r' : LotteryChoice.Representation site pref)
+  (s : S), r.R s = r'.R s
+@LotteryChoice.u_unique : ∀ {X : Type} [inst : Fintype X] {Site S : Type} {Z : S → Type}
+  [inst_1 : (s : S) → Fintype (Z s)] (site : S → Site) [Nonempty S]
+  {pref : LotteryChoice.Ticket X Z → LotteryChoice.Ticket X Z → Prop} (r r' : LotteryChoice.Representation site pref),
+  ∃ a b, 0 < a ∧ ∀ (p : LotteryChoice.Lottery X), r'.u p = a * r.u p + b
+@LotteryChoice.Representation.positiveAffine : {X : Type} →
+  [inst : Fintype X] →
+    {Site S : Type} →
+      {Z : S → Type} →
+        [inst_1 : (s : S) → Fintype (Z s)] →
+          (site : S → Site) →
+            {pref : LotteryChoice.Ticket X Z → LotteryChoice.Ticket X Z → Prop} →
+              LotteryChoice.Representation site pref → (a : ℝ) → ℝ → 0 < a → LotteryChoice.Representation site pref
+@LotteryChoice.Representation.positiveAffine_u : ∀ {X : Type} [inst : Fintype X] {Site S : Type} {Z : S → Type}
+  [inst_1 : (s : S) → Fintype (Z s)] (site : S → Site)
+  {pref : LotteryChoice.Ticket X Z → LotteryChoice.Ticket X Z → Prop} (rep : LotteryChoice.Representation site pref)
+  (a b : ℝ) (ha : 0 < a) (p : LotteryChoice.Lottery X),
+  (LotteryChoice.Representation.positiveAffine site rep a b ha).u p = a * rep.u p + b
+@LotteryChoice.Representation.positiveAffine_R : ∀ {X : Type} [inst : Fintype X] {Site S : Type} {Z : S → Type}
+  [inst_1 : (s : S) → Fintype (Z s)] (site : S → Site)
+  {pref : LotteryChoice.Ticket X Z → LotteryChoice.Ticket X Z → Prop} (rep : LotteryChoice.Representation site pref)
+  (a b : ℝ) (ha : 0 < a), (LotteryChoice.Representation.positiveAffine site rep a b ha).R = rep.R
+@LotteryChoice.Paper.representation_iff : ∀ {X : Type} [inst : Fintype X] {Problem Info : Type}
+  (eligible : Problem → Info → Prop) (A : Info → Type) [inst_1 : (I : Info) → Fintype (A I)] (Z : Problem → Type)
+  [inst_2 : (Γ : Problem) → Fintype (Z Γ)] [Nonempty (LotteryChoice.Paper.Scenario eligible A)]
+  (pref :
+    LotteryChoice.Ticket X (LotteryChoice.Paper.scenarioNodes eligible A Z) →
+      LotteryChoice.Ticket X (LotteryChoice.Paper.scenarioNodes eligible A Z) → Prop),
+  LotteryChoice.Axioms (LotteryChoice.Paper.scenarioSite eligible A) pref ↔
+    Nonempty (LotteryChoice.Representation (LotteryChoice.Paper.scenarioSite eligible A) pref)
+@LotteryChoice.Paper.deliberation_iff : ∀ {X : Type} [inst : Fintype X] {Problem Info : Type}
+  (eligible : Problem → Info → Prop) (A : Info → Type) [inst_1 : (I : Info) → Fintype (A I)] (Z : Problem → Type)
+  [inst_2 : (Γ : Problem) → Fintype (Z Γ)] (f : (Γ : Problem) → Z Γ → LotteryChoice.Lottery X)
+  {pref :
+    LotteryChoice.Ticket X (LotteryChoice.Paper.scenarioNodes eligible A Z) →
+      LotteryChoice.Ticket X (LotteryChoice.Paper.scenarioNodes eligible A Z) → Prop}
+  (rep : LotteryChoice.Representation (LotteryChoice.Paper.scenarioSite eligible A) pref)
+  {s s' : LotteryChoice.Paper.Scenario eligible A},
+  s.I = s'.I →
+    (pref ⟨s, f s.Γ⟩ ⟨s', f s'.Γ⟩ ↔ ∑ z, (rep.R s').prob z * rep.u (f s'.Γ z) ≤ ∑ z, (rep.R s).prob z * rep.u (f s.Γ z))
+@LotteryChoice.Paper.R_unique : ∀ {X : Type} [inst : Fintype X] {Problem Info : Type} (eligible : Problem → Info → Prop)
+  (A : Info → Type) [inst_1 : (I : Info) → Fintype (A I)] (Z : Problem → Type) [inst_2 : (Γ : Problem) → Fintype (Z Γ)]
+  {pref :
+    LotteryChoice.Ticket X (LotteryChoice.Paper.scenarioNodes eligible A Z) →
+      LotteryChoice.Ticket X (LotteryChoice.Paper.scenarioNodes eligible A Z) → Prop}
+  (rep rep' : LotteryChoice.Representation (LotteryChoice.Paper.scenarioSite eligible A) pref)
+  (s : LotteryChoice.Paper.Scenario eligible A), rep.R s = rep'.R s
+@LotteryChoice.Paper.u_unique : ∀ {X : Type} [inst : Fintype X] {Problem Info : Type} (eligible : Problem → Info → Prop)
+  (A : Info → Type) [inst_1 : (I : Info) → Fintype (A I)] (Z : Problem → Type) [inst_2 : (Γ : Problem) → Fintype (Z Γ)]
+  [Nonempty (LotteryChoice.Paper.Scenario eligible A)]
+  {pref :
+    LotteryChoice.Ticket X (LotteryChoice.Paper.scenarioNodes eligible A Z) →
+      LotteryChoice.Ticket X (LotteryChoice.Paper.scenarioNodes eligible A Z) → Prop}
+  (rep rep' : LotteryChoice.Representation (LotteryChoice.Paper.scenarioSite eligible A) pref),
+  ∃ a b, 0 < a ∧ ∀ (p : LotteryChoice.Lottery X), rep'.u p = a * rep.u p + b
+structure LotteryChoice.Lottery (X : Type) [Fintype X] : Type
+number of parameters: 2
+fields:
+  LotteryChoice.Lottery.prob : X → ℝ
+  LotteryChoice.Lottery.nonneg : ∀ (x : X), 0 ≤ self.prob x
+  LotteryChoice.Lottery.sum_one : ∑ x, self.prob x = 1
+constructor:
+  LotteryChoice.Lottery.mk {X : Type} [Fintype X] (prob : X → ℝ) (nonneg : ∀ (x : X), 0 ≤ prob x)
+    (sum_one : ∑ x, prob x = 1) : LotteryChoice.Lottery X
+def LotteryChoice.Lottery.mix : {X : Type} →
+  [inst : Fintype X] → ↑unitInterval → LotteryChoice.Lottery X → LotteryChoice.Lottery X → LotteryChoice.Lottery X :=
+fun {X} [Fintype X] t p q => { prob := fun x => ↑t * p.prob x + (1 - ↑t) * q.prob x, nonneg := ⋯, sum_one := ⋯ }
+def LotteryChoice.Lottery.pure : {X : Type} → [inst : Fintype X] → [DecidableEq X] → X → LotteryChoice.Lottery X :=
+fun {X} [Fintype X] [DecidableEq X] x => { prob := fun y => if y = x then 1 else 0, nonneg := ⋯, sum_one := ⋯ }
+@[reducible] def LotteryChoice.Ticket : (X : Type) → [Fintype X] → {S : Type} → (S → Type) → Type :=
+fun X [Fintype X] {S} Z => (s : S) × (Z s → LotteryChoice.Lottery X)
+def LotteryChoice.mixF : {X : Type} →
+  [inst : Fintype X] →
+    {N : Type} →
+      ↑unitInterval → (N → LotteryChoice.Lottery X) → (N → LotteryChoice.Lottery X) → N → LotteryChoice.Lottery X :=
+fun {X} [Fintype X] {N} t g h z => LotteryChoice.Lottery.mix t (g z) (h z)
+structure LotteryChoice.Axioms {X : Type} [Fintype X] {Site S : Type} {Z : S → Type} (site : S → Site)
+  (pref : LotteryChoice.Ticket X Z → LotteryChoice.Ticket X Z → Prop) : Prop
+number of parameters: 7
+fields:
+  LotteryChoice.Axioms.complete : ∀ (a b : LotteryChoice.Ticket X Z), site a.fst = site b.fst → pref a b ∨ pref b a
+  LotteryChoice.Axioms.trans : ∀ (a b c : LotteryChoice.Ticket X Z),
+      site a.fst = site b.fst → site b.fst = site c.fst → pref a b → pref b c → pref a c
+  LotteryChoice.Axioms.calib : ∀ (s s' : S),
+      site s = site s' → ∀ (p : LotteryChoice.Lottery X), pref ⟨s, fun x => p⟩ ⟨s', fun x => p⟩
+  LotteryChoice.Axioms.common : ∀ (s s' : S) (p q : LotteryChoice.Lottery X),
+      pref ⟨s, fun x => p⟩ ⟨s, fun x => q⟩ ↔ pref ⟨s', fun x => p⟩ ⟨s', fun x => q⟩
+  LotteryChoice.Axioms.nondeg : ∃ s p q, pref ⟨s, fun x => p⟩ ⟨s, fun x => q⟩ ∧ ¬pref ⟨s, fun x => q⟩ ⟨s, fun x => p⟩
+  LotteryChoice.Axioms.indep : ∀ (s : S) (g h k : Z s → LotteryChoice.Lottery X) (t : ↑unitInterval),
+      0 < ↑t → ↑t < 1 → (pref ⟨s, g⟩ ⟨s, h⟩ ↔ pref ⟨s, LotteryChoice.mixF t g k⟩ ⟨s, LotteryChoice.mixF t h k⟩)
+  LotteryChoice.Axioms.cont : ∀ (s : S) (g h k : Z s → LotteryChoice.Lottery X),
+      IsClosed {t | pref ⟨s, LotteryChoice.mixF t g h⟩ ⟨s, k⟩} ∧
+        IsClosed {t | pref ⟨s, k⟩ ⟨s, LotteryChoice.mixF t g h⟩}
+  LotteryChoice.Axioms.mono : ∀ (s : S) (g h : Z s → LotteryChoice.Lottery X),
+      (∀ (z : Z s), pref ⟨s, fun x => g z⟩ ⟨s, fun x => h z⟩) → pref ⟨s, g⟩ ⟨s, h⟩
+constructor:
+  LotteryChoice.Axioms.mk {X : Type} [Fintype X] {Site S : Type} {Z : S → Type} {site : S → Site}
+    {pref : LotteryChoice.Ticket X Z → LotteryChoice.Ticket X Z → Prop}
+    (complete : ∀ (a b : LotteryChoice.Ticket X Z), site a.fst = site b.fst → pref a b ∨ pref b a)
+    (trans :
+      ∀ (a b c : LotteryChoice.Ticket X Z),
+        site a.fst = site b.fst → site b.fst = site c.fst → pref a b → pref b c → pref a c)
+    (calib : ∀ (s s' : S), site s = site s' → ∀ (p : LotteryChoice.Lottery X), pref ⟨s, fun x => p⟩ ⟨s', fun x => p⟩)
+    (common :
+      ∀ (s s' : S) (p q : LotteryChoice.Lottery X),
+        pref ⟨s, fun x => p⟩ ⟨s, fun x => q⟩ ↔ pref ⟨s', fun x => p⟩ ⟨s', fun x => q⟩)
+    (nondeg : ∃ s p q, pref ⟨s, fun x => p⟩ ⟨s, fun x => q⟩ ∧ ¬pref ⟨s, fun x => q⟩ ⟨s, fun x => p⟩)
+    (indep :
+      ∀ (s : S) (g h k : Z s → LotteryChoice.Lottery X) (t : ↑unitInterval),
+        0 < ↑t → ↑t < 1 → (pref ⟨s, g⟩ ⟨s, h⟩ ↔ pref ⟨s, LotteryChoice.mixF t g k⟩ ⟨s, LotteryChoice.mixF t h k⟩))
+    (cont :
+      ∀ (s : S) (g h k : Z s → LotteryChoice.Lottery X),
+        IsClosed {t | pref ⟨s, LotteryChoice.mixF t g h⟩ ⟨s, k⟩} ∧
+          IsClosed {t | pref ⟨s, k⟩ ⟨s, LotteryChoice.mixF t g h⟩})
+    (mono :
+      ∀ (s : S) (g h : Z s → LotteryChoice.Lottery X),
+        (∀ (z : Z s), pref ⟨s, fun x => g z⟩ ⟨s, fun x => h z⟩) → pref ⟨s, g⟩ ⟨s, h⟩) :
+    LotteryChoice.Axioms site pref
+def LotteryChoice.EV : {X : Type} →
+  [inst : Fintype X] →
+    {S : Type} →
+      {Z : S → Type} →
+        [inst_1 : (s : S) → Fintype (Z s)] →
+          (LotteryChoice.Lottery X → ℝ) → ((s : S) → LotteryChoice.Lottery (Z s)) → LotteryChoice.Ticket X Z → ℝ :=
+fun {X} [Fintype X] {S} {Z} [(s : S) → Fintype (Z s)] u R a => ∑ z, (R a.fst).prob z * u (a.snd z)
+structure LotteryChoice.Representation {X : Type} [Fintype X] {Site S : Type} {Z : S → Type} [(s : S) → Fintype (Z s)]
+  (site : S → Site) (pref : LotteryChoice.Ticket X Z → LotteryChoice.Ticket X Z → Prop) : Type
+number of parameters: 8
+fields:
+  LotteryChoice.Representation.u : LotteryChoice.Lottery X → ℝ
+  LotteryChoice.Representation.affine : ∀ (t : ↑unitInterval) (p q : LotteryChoice.Lottery X),
+      self.u (LotteryChoice.Lottery.mix t p q) = ↑t * self.u p + (1 - ↑t) * self.u q
+  LotteryChoice.Representation.nonconst : ∃ p q, self.u p ≠ self.u q
+  LotteryChoice.Representation.R : (s : S) → LotteryChoice.Lottery (Z s)
+  LotteryChoice.Representation.represents : ∀ (a b : LotteryChoice.Ticket X Z),
+      site a.fst = site b.fst → (pref a b ↔ LotteryChoice.EV self.u self.R b ≤ LotteryChoice.EV self.u self.R a)
+constructor:
+  LotteryChoice.Representation.mk {X : Type} [Fintype X] {Site S : Type} {Z : S → Type} [(s : S) → Fintype (Z s)]
+    {site : S → Site} {pref : LotteryChoice.Ticket X Z → LotteryChoice.Ticket X Z → Prop}
+    (u : LotteryChoice.Lottery X → ℝ)
+    (affine :
+      ∀ (t : ↑unitInterval) (p q : LotteryChoice.Lottery X),
+        u (LotteryChoice.Lottery.mix t p q) = ↑t * u p + (1 - ↑t) * u q)
+    (nonconst : ∃ p q, u p ≠ u q) (R : (s : S) → LotteryChoice.Lottery (Z s))
+    (represents :
+      ∀ (a b : LotteryChoice.Ticket X Z),
+        site a.fst = site b.fst → (pref a b ↔ LotteryChoice.EV u R b ≤ LotteryChoice.EV u R a)) :
+    LotteryChoice.Representation site pref
+def LotteryChoice.delib : {X : Type} →
+  [inst : Fintype X] →
+    {S : Type} →
+      {Z : S → Type} →
+        ((s : S) → Z s → LotteryChoice.Lottery X) →
+          (LotteryChoice.Ticket X Z → LotteryChoice.Ticket X Z → Prop) → S → S → Prop :=
+fun {X} [Fintype X] {S} {Z} f pref s s' => pref ⟨s, f s⟩ ⟨s', f s'⟩
+def LotteryChoice.V : {X : Type} →
+  [inst : Fintype X] →
+    {Site S : Type} →
+      {Z : S → Type} →
+        [inst_1 : (s : S) → Fintype (Z s)] →
+          (site : S → Site) →
+            ((s : S) → Z s → LotteryChoice.Lottery X) →
+              {pref : LotteryChoice.Ticket X Z → LotteryChoice.Ticket X Z → Prop} →
+                LotteryChoice.Representation site pref → S → ℝ :=
+fun {X} [Fintype X] {Site S} {Z} [(s : S) → Fintype (Z s)] site f {pref} rep s => LotteryChoice.EV rep.u rep.R ⟨s, f s⟩
+structure LotteryChoice.Paper.Scenario {Problem Info : Type} (eligible : Problem → Info → Prop) (A : Info → Type)
+  [(I : Info) → Fintype (A I)] : Type
+number of parameters: 5
+fields:
+  LotteryChoice.Paper.Scenario.Γ : Problem
+  LotteryChoice.Paper.Scenario.I : Info
+  LotteryChoice.Paper.Scenario.hI : eligible self.Γ self.I
+  LotteryChoice.Paper.Scenario.α : LotteryChoice.Lottery (A self.I)
+constructor:
+  LotteryChoice.Paper.Scenario.mk {Problem Info : Type} {eligible : Problem → Info → Prop} {A : Info → Type}
+    [(I : Info) → Fintype (A I)] (Γ : Problem) (I : Info) (hI : eligible Γ I) (α : LotteryChoice.Lottery (A I)) :
+    LotteryChoice.Paper.Scenario eligible A
+@[reducible] def LotteryChoice.Paper.scenarioSite : {Problem Info : Type} →
+  (eligible : Problem → Info → Prop) →
+    (A : Info → Type) → [inst : (I : Info) → Fintype (A I)] → LotteryChoice.Paper.Scenario eligible A → Info :=
+fun {Problem Info} eligible A [(I : Info) → Fintype (A I)] s => s.I
+@[reducible] def LotteryChoice.Paper.scenarioNodes : {Problem Info : Type} →
+  (eligible : Problem → Info → Prop) →
+    (A : Info → Type) →
+      [inst : (I : Info) → Fintype (A I)] → (Problem → Type) → LotteryChoice.Paper.Scenario eligible A → Type :=
+fun {Problem Info} eligible A [(I : Info) → Fintype (A I)] Z s => Z s.Γ
+'LotteryChoice.affine_order_unique' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LotteryChoice.affine_rep_unique' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LotteryChoice.normalized_constants_agree' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LotteryChoice.representation_of_axioms' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LotteryChoice.axioms_of_representation' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LotteryChoice.representation_iff' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LotteryChoice.delib_iff' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LotteryChoice.R_unique' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LotteryChoice.u_unique' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LotteryChoice.Representation.positiveAffine' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LotteryChoice.Representation.positiveAffine_u' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LotteryChoice.Representation.positiveAffine_R' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LotteryChoice.Paper.representation_iff' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LotteryChoice.Paper.deliberation_iff' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LotteryChoice.Paper.R_unique' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LotteryChoice.Paper.u_unique' depends on axioms: [propext, Classical.choice, Quot.sound]
+@LotteryChoice.exists_best_worst : ∀ {X : Type} [inst : Fintype X] [Nonempty X]
+  (r : LotteryChoice.Lottery X → LotteryChoice.Lottery X → Prop),
+  (∀ (p q : LotteryChoice.Lottery X), r p q ∨ r q p) →
+    (∀ (p q w : LotteryChoice.Lottery X), r p q → r q w → r p w) →
+      (∀ (p q w : LotteryChoice.Lottery X) (t : ↑unitInterval),
+          0 < ↑t → ↑t < 1 → (r p q ↔ r (LotteryChoice.Lottery.mix t p w) (LotteryChoice.Lottery.mix t q w))) →
+        ∃ top bot, (∀ (p : LotteryChoice.Lottery X), r top p) ∧ ∀ (p : LotteryChoice.Lottery X), r p bot
+@LotteryChoice.affine_rep_of_bounded_normalized : ∀ {X N : Type} [inst : Fintype X]
+  (r : (N → LotteryChoice.Lottery X) → (N → LotteryChoice.Lottery X) → Prop),
+  (∀ (g h : N → LotteryChoice.Lottery X), r g h ∨ r h g) →
+    (∀ (g h k : N → LotteryChoice.Lottery X), r g h → r h k → r g k) →
+      (∀ (g h k : N → LotteryChoice.Lottery X) (t : ↑unitInterval),
+          0 < ↑t → ↑t < 1 → (r g h ↔ r (LotteryChoice.mixF t g k) (LotteryChoice.mixF t h k))) →
+        (∀ (g h k : N → LotteryChoice.Lottery X),
+            IsClosed {t | r (LotteryChoice.mixF t g h) k} ∧ IsClosed {t | r k (LotteryChoice.mixF t g h)}) →
+          ∀ (top bot : N → LotteryChoice.Lottery X),
+            (∀ (g : N → LotteryChoice.Lottery X), r top g) →
+              (∀ (g : N → LotteryChoice.Lottery X), r g bot) →
+                ¬r bot top →
+                  ∃ W,
+                    (∀ (g h : N → LotteryChoice.Lottery X), r g h ↔ W h ≤ W g) ∧
+                      (∀ (t : ↑unitInterval) (g h : N → LotteryChoice.Lottery X),
+                          W (LotteryChoice.mixF t g h) = ↑t * W g + (1 - ↑t) * W h) ∧
+                        W bot = 0 ∧ W top = 1 ∧ ∀ (g : N → LotteryChoice.Lottery X), 0 ≤ W g ∧ W g ≤ 1
+@LotteryChoice.affine_rep_unique : ∀ {X : Type} [inst : Fintype X] {N : Type}
+  (r : (N → LotteryChoice.Lottery X) → (N → LotteryChoice.Lottery X) → Prop) (W W' : (N → LotteryChoice.Lottery X) → ℝ),
+  (∀ (g h : N → LotteryChoice.Lottery X), r g h ↔ W h ≤ W g) →
+    (∀ (g h : N → LotteryChoice.Lottery X), r g h ↔ W' h ≤ W' g) →
+      (∀ (t : ↑unitInterval) (g h : N → LotteryChoice.Lottery X),
+          W (LotteryChoice.mixF t g h) = ↑t * W g + (1 - ↑t) * W h) →
+        (∀ (t : ↑unitInterval) (g h : N → LotteryChoice.Lottery X),
+            W' (LotteryChoice.mixF t g h) = ↑t * W' g + (1 - ↑t) * W' h) →
+          ∃ a b, 0 < a ∧ ∀ (g : N → LotteryChoice.Lottery X), W' g = a * W g + b
+@LotteryChoice.normalized_constants_agree : ∀ {X : Type} [inst : Fintype X] {N : Type}
+  (r : LotteryChoice.Lottery X → LotteryChoice.Lottery X → Prop) (u : LotteryChoice.Lottery X → ℝ)
+  (W : (N → LotteryChoice.Lottery X) → ℝ) (top bot : LotteryChoice.Lottery X),
+  (∀ (p q : LotteryChoice.Lottery X), r p q ↔ u q ≤ u p) →
+    (∀ (p q : LotteryChoice.Lottery X), r p q ↔ (W fun x => q) ≤ W fun x => p) →
+      (∀ (t : ↑unitInterval) (p q : LotteryChoice.Lottery X),
+          u (LotteryChoice.Lottery.mix t p q) = ↑t * u p + (1 - ↑t) * u q) →
+        (∀ (t : ↑unitInterval) (g h : N → LotteryChoice.Lottery X),
+            W (LotteryChoice.mixF t g h) = ↑t * W g + (1 - ↑t) * W h) →
+          u bot = 0 →
+            u top = 1 →
+              (W fun x => bot) = 0 → (W fun x => top) = 1 → ∀ (p : LotteryChoice.Lottery X), (W fun x => p) = u p
+@LotteryChoice.finite_ticket_representation : ∀ {X : Type} [inst : Fintype X] {N : Type} [inst_1 : Fintype N]
+  [Nonempty N] (u : LotteryChoice.Lottery X → ℝ) (W : (N → LotteryChoice.Lottery X) → ℝ)
+  (top bot : LotteryChoice.Lottery X),
+  (∀ (t : ↑unitInterval) (p q : LotteryChoice.Lottery X),
+      u (LotteryChoice.Lottery.mix t p q) = ↑t * u p + (1 - ↑t) * u q) →
+    (∀ (t : ↑unitInterval) (g h : N → LotteryChoice.Lottery X),
+        W (LotteryChoice.mixF t g h) = ↑t * W g + (1 - ↑t) * W h) →
+      u bot = 0 →
+        u top = 1 →
+          (∀ (p : LotteryChoice.Lottery X), 0 ≤ u p ∧ u p ≤ 1) →
+            (∀ (g : N → LotteryChoice.Lottery X), 0 ≤ W g) →
+              (∀ (p : LotteryChoice.Lottery X), (W fun x => p) = u p) →
+                (∀ (g h : N → LotteryChoice.Lottery X), (∀ (z : N), u (g z) = u (h z)) → W g = W h) →
+                  ∃ R, ∀ (g : N → LotteryChoice.Lottery X), W g = ∑ z, R.prob z * u (g z)
+'LotteryChoice.exists_best_worst' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LotteryChoice.affine_rep_of_bounded_normalized' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LotteryChoice.affine_baryF' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LotteryChoice.affine_barycenter' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LotteryChoice.finite_ticket_representation' depends on axioms: [propext, Classical.choice, Quot.sound]
+Exit code: 0
